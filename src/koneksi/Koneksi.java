@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author ikyys
+ * @author Akmal Alfarizqi
  */
 
 public class Koneksi {

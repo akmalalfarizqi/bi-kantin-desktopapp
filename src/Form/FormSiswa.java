@@ -84,6 +84,17 @@ public class FormSiswa extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setTitle("BI-KANTIN - Dashboard Siswa (" + username + ")");
         lblUser.setText("Selamat Datang, " + username + "!");
+        applyCustomStyles();
+
+        // Double-click baris tabel untuk langsung mencetak struk
+        tblPesanan.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2 && tblPesanan.getSelectedRow() != -1) {
+                    btnCetakStrukActionPerformed(null);
+                }
+            }
+        });
 
         loadMenu();
         tampilPesananSiswa();
@@ -100,6 +111,159 @@ public class FormSiswa extends javax.swing.JFrame {
                 }
             }
         });
+    }
+
+    /**
+     * Mengatur tema warna dan estetika tampilan FormSiswa
+     */
+    private void applyCustomStyles() {
+        // Background Form
+        getContentPane().setBackground(new java.awt.Color(248, 250, 252));
+
+        // Judul Utama & Greeting
+        lblJudul.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 18));
+        lblJudul.setForeground(new java.awt.Color(15, 23, 42)); // Slate 900
+
+        lblUser.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 14));
+        lblUser.setForeground(new java.awt.Color(37, 99, 235)); // Royal Blue
+
+        // Label Form
+        java.awt.Font labelFont = new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12);
+        java.awt.Color labelColor = new java.awt.Color(71, 85, 105); // Slate 600
+        jLabel2.setFont(labelFont);
+        jLabel2.setForeground(labelColor);
+        jLabel3.setFont(labelFont);
+        jLabel3.setForeground(labelColor);
+        jLabel4.setFont(labelFont);
+        jLabel4.setForeground(labelColor);
+        jLabel5.setFont(labelFont);
+        jLabel5.setForeground(labelColor);
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+        jLabel6.setForeground(new java.awt.Color(30, 41, 59));
+
+        // Input & Controls
+        cbMenu.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+        cbMenu.setBackground(java.awt.Color.WHITE);
+
+        spnJumlah.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+
+        txtHarga.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+        txtHarga.setBackground(new java.awt.Color(241, 245, 249));
+
+        // Total bayar field dibuat lebih eye-catching (hijau segar)
+        txtTotal.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 15));
+        txtTotal.setForeground(new java.awt.Color(22, 163, 74));
+        txtTotal.setBackground(new java.awt.Color(240, 253, 244));
+
+        // Status banner terkini
+        lblStatusTerkini.setOpaque(true);
+        lblStatusTerkini.setBackground(new java.awt.Color(238, 242, 255));
+        lblStatusTerkini.setForeground(new java.awt.Color(67, 56, 202));
+        lblStatusTerkini.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+        lblStatusTerkini.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+            new javax.swing.border.LineBorder(new java.awt.Color(199, 210, 254), 1, true),
+            javax.swing.BorderFactory.createEmptyBorder(6, 12, 6, 12)
+        ));
+
+        // Tombol
+        styleButton(btnPesan, new java.awt.Color(22, 163, 74), 14);  // Emerald Green
+        styleButton(btnCetakStruk, new java.awt.Color(79, 70, 229), 12); // Royal Indigo (Cetak Struk)
+        styleButton(btnRefresh, new java.awt.Color(13, 148, 136), 12); // Teal
+        styleButton(btnLogout, new java.awt.Color(225, 29, 72), 12);    // Rose Red
+
+        // Inisialisasi tabel
+        styleTable(tblPesanan, jScrollPane1);
+    }
+
+    private void styleButton(javax.swing.JButton btn, java.awt.Color bgColor, int fontSize) {
+        btn.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, fontSize));
+        btn.setBackground(bgColor);
+        btn.setForeground(java.awt.Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }
+
+    private void styleTable(javax.swing.JTable table, javax.swing.JScrollPane scrollPane) {
+        table.setRowHeight(30);
+        table.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 12));
+        table.setSelectionBackground(new java.awt.Color(219, 234, 254));
+        table.setSelectionForeground(new java.awt.Color(15, 23, 42));
+        table.setGridColor(new java.awt.Color(241, 245, 249));
+
+        if (table.getTableHeader() != null) {
+            table.getTableHeader().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 12));
+            table.getTableHeader().setBackground(new java.awt.Color(226, 232, 240));
+            table.getTableHeader().setForeground(new java.awt.Color(30, 41, 59));
+            table.getTableHeader().setReorderingAllowed(false);
+        }
+
+        if (scrollPane != null) {
+            scrollPane.getViewport().setBackground(java.awt.Color.WHITE);
+            scrollPane.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(226, 232, 240), 1));
+        }
+
+        // Render warna status dan perataan kolom tabel pesanan
+        if (table.getColumnCount() >= 5) {
+            // Kolom ID (Center)
+            javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
+            centerRenderer.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+            table.getColumnModel().getColumn(0).setPreferredWidth(45);
+
+            // Kolom Jumlah (Center)
+            table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+            table.getColumnModel().getColumn(2).setPreferredWidth(55);
+
+            // Kolom Total Harga (Right & Rupiah format)
+            table.getColumnModel().getColumn(3).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+                @Override
+                public java.awt.Component getTableCellRendererComponent(
+                        javax.swing.JTable t, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    super.getTableCellRendererComponent(t, value, isSelected, hasFocus, row, column);
+                    setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+                    if (value instanceof Number) {
+                        setText("Rp " + String.format("%,d", ((Number) value).longValue()).replace(',', '.'));
+                    }
+                    return this;
+                }
+            });
+
+            // Kolom Status (Badge Berwarna Modern)
+            table.getColumnModel().getColumn(4).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
+                @Override
+                public java.awt.Component getTableCellRendererComponent(
+                        javax.swing.JTable t, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    javax.swing.JLabel lbl = (javax.swing.JLabel) super.getTableCellRendererComponent(t, value, isSelected, hasFocus, row, column);
+                    lbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                    String val = value != null ? value.toString() : "";
+                    String lower = val.toLowerCase();
+
+                    if (!isSelected) {
+                        lbl.setOpaque(true);
+                        if (lower.contains("selesai") || lower.contains("siap")) {
+                            lbl.setBackground(new java.awt.Color(220, 252, 231)); // Emerald-100
+                            lbl.setForeground(new java.awt.Color(21, 128, 61));   // Emerald-700
+                            lbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+                        } else if (lower.contains("proses")) {
+                            lbl.setBackground(new java.awt.Color(224, 231, 255)); // Indigo-100
+                            lbl.setForeground(new java.awt.Color(67, 56, 202));   // Indigo-700
+                            lbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+                        } else if (lower.contains("batal")) {
+                            lbl.setBackground(new java.awt.Color(254, 226, 226)); // Red-100
+                            lbl.setForeground(new java.awt.Color(185, 28, 28));   // Red-700
+                            lbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+                        } else {
+                            // Menunggu Konfirmasi / Pending
+                            lbl.setBackground(new java.awt.Color(254, 243, 199)); // Amber-100
+                            lbl.setForeground(new java.awt.Color(180, 83, 9));    // Amber-700
+                            lbl.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 11));
+                        }
+                    }
+                    return lbl;
+                }
+            });
+        }
     }
 
     /**
@@ -184,6 +348,7 @@ public class FormSiswa extends javax.swing.JFrame {
 
                     if (first) {
                         lblStatusTerkini.setText("Status Pesanan Terkini: " + status + " (" + menu + ")");
+                        updateBannerColor(status);
                         first = false;
                     }
 
@@ -192,13 +357,61 @@ public class FormSiswa extends javax.swing.JFrame {
 
                 if (first) {
                     lblStatusTerkini.setText("Status Pesanan Terkini: Belum ada pesanan");
+                    updateBannerColor(null);
                 }
             }
 
             tblPesanan.setModel(model);
+            styleTable(tblPesanan, jScrollPane1);
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Gagal memuat pesanan siswa", e);
+        }
+    }
+
+    /**
+     * Memperbarui warna banner status pesanan terkini secara dinamis
+     */
+    private void updateBannerColor(String status) {
+        if (status == null) {
+            lblStatusTerkini.setBackground(new java.awt.Color(241, 245, 249));
+            lblStatusTerkini.setForeground(new java.awt.Color(100, 116, 139));
+            lblStatusTerkini.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                new javax.swing.border.LineBorder(new java.awt.Color(203, 213, 225), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(6, 12, 6, 12)
+            ));
+            return;
+        }
+
+        String lower = status.toLowerCase();
+        if (lower.contains("selesai") || lower.contains("siap")) {
+            lblStatusTerkini.setBackground(new java.awt.Color(236, 253, 245));
+            lblStatusTerkini.setForeground(new java.awt.Color(5, 150, 105));
+            lblStatusTerkini.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                new javax.swing.border.LineBorder(new java.awt.Color(167, 243, 208), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(6, 12, 6, 12)
+            ));
+        } else if (lower.contains("proses")) {
+            lblStatusTerkini.setBackground(new java.awt.Color(238, 242, 255));
+            lblStatusTerkini.setForeground(new java.awt.Color(67, 56, 202));
+            lblStatusTerkini.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                new javax.swing.border.LineBorder(new java.awt.Color(199, 210, 254), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(6, 12, 6, 12)
+            ));
+        } else if (lower.contains("batal")) {
+            lblStatusTerkini.setBackground(new java.awt.Color(254, 242, 242));
+            lblStatusTerkini.setForeground(new java.awt.Color(220, 38, 38));
+            lblStatusTerkini.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                new javax.swing.border.LineBorder(new java.awt.Color(254, 202, 202), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(6, 12, 6, 12)
+            ));
+        } else {
+            lblStatusTerkini.setBackground(new java.awt.Color(254, 252, 232));
+            lblStatusTerkini.setForeground(new java.awt.Color(161, 98, 7));
+            lblStatusTerkini.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                new javax.swing.border.LineBorder(new java.awt.Color(254, 240, 138), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(6, 12, 6, 12)
+            ));
         }
     }
 
@@ -225,6 +438,7 @@ public class FormSiswa extends javax.swing.JFrame {
         btnPesan = new javax.swing.JButton();
         lblStatusTerkini = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        btnCetakStruk = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblPesanan = new javax.swing.JTable();
@@ -268,6 +482,9 @@ public class FormSiswa extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel6.setText("Riwayat & Tracking Pesanan Saya:");
+
+        btnCetakStruk.setText("Cetak Struk");
+        btnCetakStruk.addActionListener(this::btnCetakStrukActionPerformed);
 
         btnRefresh.setText("Refresh");
         btnRefresh.addActionListener(this::btnRefreshActionPerformed);
@@ -317,8 +534,10 @@ public class FormSiswa extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRefresh))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                                .addComponent(btnCetakStruk)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
                             .addComponent(lblStatusTerkini, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(25, 25, 25))
             .addGroup(layout.createSequentialGroup()
@@ -360,6 +579,7 @@ public class FormSiswa extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
+                            .addComponent(btnCetakStruk)
                             .addComponent(btnRefresh))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -396,7 +616,7 @@ public class FormSiswa extends javax.swing.JFrame {
                    + "VALUES (?, ?, ?, ?, 'Menunggu Konfirmasi')";
 
         try (Connection c = Koneksi.getKoneksi();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+             PreparedStatement ps = c.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, userId);
             ps.setInt(2, item.getId());
@@ -405,18 +625,73 @@ public class FormSiswa extends javax.swing.JFrame {
 
             ps.executeUpdate();
 
-            JOptionPane.showMessageDialog(this, "Pesanan berhasil dikirim!\n"
-                    + "Menu: " + item.getNama() + "\n"
-                    + "Jumlah: " + jumlah + "\n"
-                    + "Total: Rp " + totalHarga);
+            int newPesananId = -1;
+            try (ResultSet gk = ps.getGeneratedKeys()) {
+                if (gk.next()) {
+                    newPesananId = gk.getInt(1);
+                }
+            }
 
             spnJumlah.setValue(1);
             tampilPesananSiswa();
+
+            String totalFormatted = String.format("%,d", totalHarga).replace(',', '.');
+            int opsiCetak = JOptionPane.showConfirmDialog(this,
+                    "Pesanan berhasil dikirim!\n\n"
+                    + "Menu   : " + item.getNama() + "\n"
+                    + "Jumlah : " + jumlah + "\n"
+                    + "Total  : Rp " + totalFormatted + "\n\n"
+                    + "Apakah Anda ingin mencetak struk sekarang?",
+                    "Pesanan Berhasil",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            if (opsiCetak == JOptionPane.YES_OPTION) {
+                if (newPesananId != -1) {
+                    bukaDialogStruk(newPesananId);
+                } else if (tblPesanan.getRowCount() > 0) {
+                    int topId = Integer.parseInt(tblPesanan.getValueAt(0, 0).toString());
+                    bukaDialogStruk(topId);
+                }
+            }
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Gagal mengirim pesanan: " + e.getMessage());
         }
     }//GEN-LAST:event_btnPesanActionPerformed
+
+    private void btnCetakStrukActionPerformed(java.awt.event.ActionEvent evt) {
+        int selectedRow = tblPesanan.getSelectedRow();
+        if (selectedRow == -1) {
+            if (tblPesanan.getRowCount() > 0) {
+                // Pilih baris pesanan paling atas (terbaru) secara otomatis
+                selectedRow = 0;
+                tblPesanan.setRowSelectionInterval(0, 0);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Belum ada riwayat pesanan yang dapat dicetak struknya.\nSilakan lakukan pemesanan terlebih dahulu.",
+                    "Perhatian", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+
+        try {
+            int pesananId = Integer.parseInt(tblPesanan.getValueAt(selectedRow, 0).toString());
+            bukaDialogStruk(pesananId);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Data ID pesanan tidak valid: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Membuka modal dialog cetak struk pembayaran siswa
+     * 
+     * @param pesananId ID pesanan yang akan dicetak struknya
+     */
+    public void bukaDialogStruk(int pesananId) {
+        DialogCetakStruk dialog = new DialogCetakStruk(this, pesananId);
+        dialog.setVisible(true);
+    }
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         loadMenu();
@@ -458,6 +733,7 @@ public class FormSiswa extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCetakStruk;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnPesan;
     private javax.swing.JButton btnRefresh;
